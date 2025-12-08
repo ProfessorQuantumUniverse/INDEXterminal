@@ -499,7 +499,7 @@ a:hover::after {
 /* Responsive design improvements */
 @media (max-width: 768px) {
     .boot-ascii {
-        font-size: 6px;
+        font-size: 8px;
     }
     
     .boot-progress {
@@ -513,5 +513,12 @@ a:hover::after {
     
     .project-item {
         padding: 10px;
+    }
+}
+
+/* Further accessibility improvements for very small screens */
+@media (max-width: 480px) {
+    .boot-ascii {
+        font-size: 7px;
     }
 }

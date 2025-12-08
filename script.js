@@ -89,58 +89,74 @@ class CyberTerminal {
     async loadProjects() {
         try {
             const response = await fetch('projects.json');
+            if (!response.ok) {
+                throw new Error(`Failed to load projects: ${response.status} ${response.statusText}`);
+            }
             this.projects = await response.json();
         } catch (error) {
             console.error('Error loading projects:', error);
+            this.print('<span class="error">⚠ Fehler beim Laden der Projekte. Verwende Fallback-Daten.</span>', 'error');
             // Fallback to empty projects
             this.projects = this.initProjects();
         }
+    }
+    
+    // Initialize audio context (reuse for performance)
+    getAudioContext() {
+        if (!this.audioContext) {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        return this.audioContext;
     }
     
     // Play sound effect
     playSound(type) {
         if (!this.soundEnabled) return;
         
-        // Create audio context for sound synthesis
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        switch(type) {
-            case 'keypress':
-                oscillator.frequency.value = 800;
-                gainNode.gain.value = 0.05;
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.03);
-                break;
-            case 'enter':
-                oscillator.frequency.value = 600;
-                gainNode.gain.value = 0.1;
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.05);
-                break;
-            case 'boot':
-                oscillator.frequency.value = 440;
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.5);
-                break;
-            case 'error':
-                oscillator.frequency.value = 200;
-                gainNode.gain.value = 0.1;
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.1);
-                break;
-            case 'success':
-                oscillator.frequency.value = 1000;
-                gainNode.gain.value = 0.08;
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.08);
-                break;
+        try {
+            const audioContext = this.getAudioContext();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            switch(type) {
+                case 'keypress':
+                    oscillator.frequency.value = 800;
+                    gainNode.gain.value = 0.05;
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.03);
+                    break;
+                case 'enter':
+                    oscillator.frequency.value = 600;
+                    gainNode.gain.value = 0.1;
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.05);
+                    break;
+                case 'boot':
+                    oscillator.frequency.value = 440;
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                    break;
+                case 'error':
+                    oscillator.frequency.value = 200;
+                    gainNode.gain.value = 0.1;
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                    break;
+                case 'success':
+                    oscillator.frequency.value = 1000;
+                    gainNode.gain.value = 0.08;
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.08);
+                    break;
+            }
+        } catch (error) {
+            // Silently fail if audio context is not available
+            console.warn('Audio playback failed:', error);
         }
     }
     
