@@ -7,32 +7,46 @@ class CyberTerminal {
         this.historyIndex = -1;
         this.currentPath = '~';
         this.currentCategory = null;
-        
-        // Initialize projects data
-        this.projects = this.initProjects();
+        this.projects = {};
+        this.soundEnabled = true;
         
         // Initialize terminal
         this.init();
     }
     
-    init() {
+    async init() {
+        // Show boot sequence first
+        await this.showBootSequence();
+        
+        // Load projects from JSON
+        await this.loadProjects();
+        
+        // Show welcome message
         this.showWelcome();
+        
+        // Setup event listeners
         this.setupEventListeners();
     }
     
     setupEventListeners() {
         this.input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
+                this.playSound('enter');
                 this.handleCommand();
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
+                this.playSound('keypress');
                 this.navigateHistory('up');
             } else if (e.key === 'ArrowDown') {
                 e.preventDefault();
+                this.playSound('keypress');
                 this.navigateHistory('down');
             } else if (e.key === 'Tab') {
                 e.preventDefault();
+                this.playSound('keypress');
                 this.handleTabCompletion();
+            } else if (e.key.length === 1) {
+                this.playSound('keypress');
             }
         });
         
@@ -40,6 +54,114 @@ class CyberTerminal {
         document.addEventListener('click', () => {
             this.input.focus();
         });
+    }
+    
+    // Boot sequence
+    async showBootSequence() {
+        const bootContainer = document.getElementById('boot-screen');
+        const bootText = document.getElementById('boot-text');
+        
+        const bootMessages = [
+            'INITIALIZING QUANTUM TERMINAL...',
+            'LOADING SYSTEM MODULES...',
+            'CALIBRATING NEURAL INTERFACE...',
+            'ESTABLISHING SECURE CONNECTION...',
+            'LOADING PROJECT DATABASE...',
+            'ACTIVATING CYBER PROTOCOLS...',
+            'SYNCHRONIZING QUANTUM STATE...',
+            'SYSTEM READY.'
+        ];
+        
+        this.playSound('boot');
+        
+        for (let i = 0; i < bootMessages.length; i++) {
+            bootText.textContent = bootMessages[i];
+            await this.sleep(300 + Math.random() * 200);
+        }
+        
+        await this.sleep(500);
+        bootContainer.classList.add('fade-out');
+        await this.sleep(800);
+        bootContainer.style.display = 'none';
+    }
+    
+    // Load projects from JSON file
+    async loadProjects() {
+        try {
+            const response = await fetch('projects.json');
+            if (!response.ok) {
+                throw new Error(`Failed to load projects: ${response.status} ${response.statusText}`);
+            }
+            this.projects = await response.json();
+        } catch (error) {
+            console.error('Error loading projects:', error);
+            this.print('<span class="error">⚠ Fehler beim Laden der Projekte. Verwende Fallback-Daten.</span>', 'error');
+            // Fallback to empty projects
+            this.projects = this.initProjects();
+        }
+    }
+    
+    // Initialize audio context (reuse for performance)
+    getAudioContext() {
+        if (!this.audioContext) {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        return this.audioContext;
+    }
+    
+    // Play sound effect
+    playSound(type) {
+        if (!this.soundEnabled) return;
+        
+        try {
+            const audioContext = this.getAudioContext();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            switch(type) {
+                case 'keypress':
+                    oscillator.frequency.value = 800;
+                    gainNode.gain.value = 0.05;
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.03);
+                    break;
+                case 'enter':
+                    oscillator.frequency.value = 600;
+                    gainNode.gain.value = 0.1;
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.05);
+                    break;
+                case 'boot':
+                    oscillator.frequency.value = 440;
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                    break;
+                case 'error':
+                    oscillator.frequency.value = 200;
+                    gainNode.gain.value = 0.1;
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                    break;
+                case 'success':
+                    oscillator.frequency.value = 1000;
+                    gainNode.gain.value = 0.08;
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.08);
+                    break;
+            }
+        } catch (error) {
+            // Silently fail if audio context is not available
+            console.warn('Audio playback failed:', error);
+        }
+    }
+    
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
     
     initProjects() {
@@ -216,10 +338,20 @@ class CyberTerminal {
             case 'credits':
                 this.showCredits();
                 break;
+            case 'sound':
+                this.toggleSound();
+                break;
             default:
+                this.playSound('error');
                 this.print(`<span class="error">Befehl nicht gefunden: ${cmd}</span>`, 'error');
                 this.print('Tippe "help" für eine Liste aller Befehle.', 'warning');
         }
+    }
+    
+    toggleSound() {
+        this.soundEnabled = !this.soundEnabled;
+        const status = this.soundEnabled ? 'AKTIVIERT' : 'DEAKTIVIERT';
+        this.print(`<span class="success">Sound-Effekte: ${status}</span>`);
     }
     
     showHelp() {
@@ -274,6 +406,9 @@ class CyberTerminal {
 <span class="help-command">credits</span>
 <span class="help-description">Credits anzeigen</span>
 
+<span class="help-command">sound</span>
+<span class="help-description">Sound-Effekte ein-/ausschalten</span>
+
 <span class="info">═══════════════════════════════════════</span>
 <span class="warning">💡 Tipp: Nutze ↑/↓ für Historie und Tab für Autovervollständigung</span>
 <span class="easter-egg">🥚 Easter Eggs: Probiere 'matrix', 'hack', '42', 'sudo', 'konami'...</span>
@@ -319,7 +454,10 @@ class CyberTerminal {
             const projectDiv = document.createElement('div');
             projectDiv.className = 'project-item';
             projectDiv.style.cursor = 'pointer';
-            projectDiv.onclick = () => window.open(project.url, '_blank');
+            projectDiv.onclick = () => {
+                this.playSound('success');
+                window.open(project.url, '_blank');
+            };
             
             const title = document.createElement('span');
             title.className = 'project-title';
