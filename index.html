@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Matrix Background -->
+    <canvas id="matrix-bg"></canvas>
+
+    <!-- CRT Effects -->
+    <div class="scanlines"></div>
+    <div class="crt-flicker"></div>
+    <div class="screen-glow"></div>
+
     <!-- Boot Screen -->
     <div id="boot-screen">
         <div class="boot-content">
@@ -19,22 +27,22 @@
   ██████   ██████  ██   ██ ██   ████    ██     ██████  ██      ██
                 </pre>
             </div>
-            <div class="boot-progress">
-                <div class="boot-bar"></div>
+            <div class="boot-progress-container">
+                <div class="boot-bar" id="boot-bar"></div>
             </div>
             <div id="boot-text" class="boot-text">INITIALIZING SYSTEM...</div>
         </div>
     </div>
 
     <!-- Main Terminal -->
-    <div id="terminal-container">
-        <div id="terminal-header">
-            <span class="terminal-title">QUANTUM_TERMINAL v1.337</span>
+    <div id="terminal-container" class="terminal-container">
+        <div id="terminal-header" class="terminal-header">
+            <span class="terminal-title" data-text="QUANTUM_TERMINAL v1.337">QUANTUM_TERMINAL v1.337</span>
             <span class="terminal-status">ONLINE</span>
         </div>
         <div id="terminal-output"></div>
         <div id="terminal-input-line">
-            <span class="prompt">guest@quantum:~$</span>
+            <span class="prompt" id="prompt-text">guest@quantum:~$</span>
             <input type="text" id="terminal-input" autocomplete="off" autofocus>
         </div>
     </div>

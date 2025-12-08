@@ -1,11 +1,84 @@
+// Matrix Background Effect
+class MatrixEffect {
+    constructor() {
+        this.canvas = document.getElementById('matrix-bg');
+        this.ctx = this.canvas.getContext('2d');
+        this.resize();
+        
+        this.characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/\\';
+        this.fontSize = 14;
+        this.columns = 0;
+        this.drops = [];
+        
+        window.addEventListener('resize', () => this.resize());
+        this.initDrops();
+        this.animate();
+    }
+    
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.columns = Math.floor(this.canvas.width / 14); // 14 is approx font width
+        this.initDrops();
+    }
+    
+    initDrops() {
+        this.drops = [];
+        for (let i = 0; i < this.columns; i++) {
+            this.drops[i] = Math.random() * -100; // Start above screen randomly
+        }
+    }
+    
+    animate() {
+        // Semi-transparent black to create trail effect
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        this.ctx.fillStyle = '#0F0'; // Green text
+        this.ctx.font = this.fontSize + 'px monospace';
+        
+        for (let i = 0; i < this.drops.length; i++) {
+            const text = this.characters.charAt(Math.floor(Math.random() * this.characters.length));
+            this.ctx.fillText(text, i * this.fontSize, this.drops[i] * this.fontSize);
+            
+            if (this.drops[i] * this.fontSize > this.canvas.height && Math.random() > 0.975) {
+                this.drops[i] = 0;
+            }
+            this.drops[i]++;
+        }
+        
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
 // Terminal class for managing the cyber terminal
 class CyberTerminal {
     constructor() {
+        // Initialize Matrix Effect
+        new MatrixEffect();
+
         this.input = document.getElementById('terminal-input');
         this.output = document.getElementById('terminal-output');
         this.commandHistory = [];
         this.historyIndex = -1;
         this.currentPath = '~';
+        this.fileSystem = {
+            '~': {
+                type: 'dir',
+                children: {
+                    'README.txt': { type: 'file', content: 'Welcome to Quantum Terminal v1.337\n\nThis is a fully interactive terminal portfolio.\nUse "help" to see available commands.' },
+                    'about.txt': { type: 'file', content: 'Quantum Terminal is a showcase of projects by Professor Quantum Universe.' },
+                    'projects': { type: 'dir', children: {} },
+                    'system': { type: 'dir', children: {
+                        'config.sys': { type: 'file', content: 'BOOT_SEQUENCE=1\nSOUND=1\nTHEME=CYBER' },
+                        'logs': { type: 'dir', children: {
+                            'boot.log': { type: 'file', content: 'System initialized successfully.' }
+                        }}
+                    }}
+                }
+            }
+        };
+        this.currentDir = this.fileSystem['~'];
         this.currentCategory = null;
         this.projects = {};
         this.soundEnabled = true;
@@ -22,13 +95,26 @@ class CyberTerminal {
         await this.loadProjects();
         
         // Show welcome message
-        this.showWelcome();
+        await this.showWelcome();
         
         // Setup event listeners
         this.setupEventListeners();
     }
     
     setupEventListeners() {
+        // Resume AudioContext on first interaction
+        const resumeAudio = () => {
+            const ctx = this.getAudioContext();
+            if (ctx && ctx.state === 'suspended') {
+                ctx.resume();
+            }
+            // Remove listeners after first interaction
+            document.removeEventListener('click', resumeAudio);
+            document.removeEventListener('keydown', resumeAudio);
+        };
+        document.addEventListener('click', resumeAudio);
+        document.addEventListener('keydown', resumeAudio);
+
         this.input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 this.playSound('enter');
@@ -60,6 +146,7 @@ class CyberTerminal {
     async showBootSequence() {
         const bootContainer = document.getElementById('boot-screen');
         const bootText = document.getElementById('boot-text');
+        const bootBar = document.getElementById('boot-bar');
         
         const bootMessages = [
             'INITIALIZING QUANTUM TERMINAL...',
@@ -72,16 +159,21 @@ class CyberTerminal {
             'SYSTEM READY.'
         ];
         
+        // Try to play sound (might be blocked until interaction)
         this.playSound('boot');
         
         for (let i = 0; i < bootMessages.length; i++) {
             bootText.textContent = bootMessages[i];
-            await this.sleep(300 + Math.random() * 200);
+            // Update progress bar
+            const progress = ((i + 1) / bootMessages.length) * 100;
+            bootBar.style.width = `${progress}%`;
+            
+            await this.sleep(300 + Math.random() * 400);
         }
         
         await this.sleep(500);
         bootContainer.classList.add('fade-out');
-        await this.sleep(800);
+        await this.sleep(1000);
         bootContainer.style.display = 'none';
     }
     
@@ -98,6 +190,51 @@ class CyberTerminal {
             this.print('<span class="error">⚠ Fehler beim Laden der Projekte. Verwende Fallback-Daten.</span>', 'error');
             // Fallback to empty projects
             this.projects = this.initProjects();
+        }
+        
+        this.buildFileSystem();
+    }
+
+    buildFileSystem() {
+        const projectsDir = this.fileSystem['~'].children['projects'];
+        
+        for (const [category, projects] of Object.entries(this.projects)) {
+            if (category === 'hidden') continue; // Skip hidden for now, or maybe put in a hidden folder
+            
+            projectsDir.children[category] = {
+                type: 'dir',
+                children: {}
+            };
+            
+            projects.forEach(project => {
+                // Create a "file" for each project
+                const fileName = project.name.toLowerCase().replace(/\s+/g, '-') + '.lnk';
+                projectsDir.children[category].children[fileName] = {
+                    type: 'link',
+                    url: project.url,
+                    description: project.description,
+                    name: project.name,
+                    category: category
+                };
+            });
+        }
+        
+        // Add hidden folder separately if we want
+        if (this.projects['hidden']) {
+             this.fileSystem['~'].children['.hidden'] = {
+                type: 'dir',
+                children: {}
+            };
+            this.projects['hidden'].forEach(project => {
+                 const fileName = project.name.toLowerCase().replace(/\s+/g, '-') + '.lnk';
+                 this.fileSystem['~'].children['.hidden'].children[fileName] = {
+                    type: 'link',
+                    url: project.url,
+                    description: project.description,
+                    name: project.name,
+                    category: 'hidden'
+                };
+            });
         }
     }
     
@@ -214,20 +351,8 @@ class CyberTerminal {
         };
     }
     
-    showWelcome() {
+    async showWelcome() {
         const welcomeText = `
-  ██████  ██    ██  █████  ███    ██ ████████ ██    ██ ███    ███ 
- ██    ██ ██    ██ ██   ██ ████   ██    ██    ██    ██ ████  ████ 
- ██    ██ ██    ██ ███████ ██ ██  ██    ██    ██    ██ ██ ████ ██ 
- ██    ██ ██    ██ ██   ██ ██  ██ ██    ██    ██    ██ ██  ██  ██ 
-  ██████   ██████  ██   ██ ██   ████    ██     ██████  ██      ██ 
-                                                                    
- ████████ ███████ ██████  ███    ███ ██ ███    ██  █████  ██      
-    ██    ██      ██   ██ ████  ████ ██ ████   ██ ██   ██ ██      
-    ██    █████   ██████  ██ ████ ██ ██ ██ ██  ██ ███████ ██      
-    ██    ██      ██   ██ ██  ██  ██ ██ ██  ██ ██ ██   ██ ██      
-    ██    ███████ ██   ██ ██      ██ ██ ██   ████ ██   ██ ███████ 
-                                                                    
 <span class="info">═══════════════════════════════════════════════════════════════════</span>
 <span class="success">  Willkommen im QUANTUM TERMINAL v1.337</span>
 <span class="info">  System: ONLINE | Status: BEREIT | Sicherheit: OPTIMAL</span>
@@ -235,11 +360,52 @@ class CyberTerminal {
 
 <span class="warning">Tippe 'help' für eine Liste aller verfügbaren Befehle.</span>
 <span class="warning">Tippe 'projects' um alle Projekte zu sehen.</span>
-<span class="info">Hinweis: Es gibt versteckte Easter Eggs... 🥚</span>
 `;
         this.print(welcomeText, 'ascii-art');
+        await this.typeText('System initialized. Waiting for input...', 'info', 30);
     }
     
+    // Helper to resolve path to a node
+    resolvePath(path) {
+        if (!path || path === '' || path === '.') return { node: this.currentDir, path: this.currentPath };
+        if (path === '~') return { node: this.fileSystem['~'], path: '~' };
+        
+        let parts = path.split('/').filter(p => p !== '');
+        let current = (path.startsWith('~') || path.startsWith('/')) ? this.fileSystem['~'] : this.currentDir;
+        let currentPathParts = (path.startsWith('~') || path.startsWith('/')) ? ['~'] : this.currentPath.split('/').filter(p => p !== '' && p !== '~');
+        
+        // Handle ~ at start of path
+        if (parts[0] === '~') {
+            parts.shift();
+        }
+
+        for (const part of parts) {
+            if (part === '..') {
+                if (currentPathParts.length > 0 && currentPathParts[0] !== '~') {
+                     // Should not happen if root is ~
+                } else if (currentPathParts.length > 1) {
+                    currentPathParts.pop();
+                    // Re-traverse from root to find parent (inefficient but simple for this structure)
+                    current = this.fileSystem['~'];
+                    for (let i = 1; i < currentPathParts.length; i++) {
+                        current = current.children[currentPathParts[i]];
+                    }
+                }
+            } else if (part === '.') {
+                continue;
+            } else {
+                if (current.type === 'dir' && current.children[part]) {
+                    current = current.children[part];
+                    currentPathParts.push(part);
+                } else {
+                    return null; // Path not found
+                }
+            }
+        }
+        
+        return { node: current, path: currentPathParts.join('/') };
+    }
+
     handleCommand() {
         const command = this.input.value.trim();
         if (!command) return;
@@ -261,6 +427,13 @@ class CyberTerminal {
         this.output.scrollTop = this.output.scrollHeight;
     }
     
+    updatePrompt() {
+        const promptText = document.getElementById('prompt-text');
+        if (promptText) {
+            promptText.textContent = `guest@quantum:${this.currentPath}$`;
+        }
+    }
+    
     executeCommand(command) {
         const [cmd, ...args] = command.toLowerCase().split(' ');
         
@@ -269,17 +442,27 @@ class CyberTerminal {
                 this.showHelp();
                 break;
             case 'projects':
-            case 'ls':
                 this.listProjects(args[0]);
                 break;
+            case 'ls':
+            case 'dir':
+                this.listDirectory(args[0]);
+                break;
             case 'cat':
-                this.showProjectDetails(args.join(' '));
+            case 'type':
+                this.readFile(args.join(' '));
                 break;
             case 'cd':
                 this.changeDirectory(args[0]);
                 break;
             case 'pwd':
                 this.print(this.currentPath, 'info');
+                break;
+            case 'mkdir':
+                this.makeDirectory(args[0]);
+                break;
+            case 'touch':
+                this.touchFile(args[0]);
                 break;
             case 'clear':
             case 'cls':
@@ -341,11 +524,49 @@ class CyberTerminal {
             case 'sound':
                 this.toggleSound();
                 break;
+
+            case 'notes':
+                this.openNotes();
+                break;
+            case 'audplayer':
+                this.launchAudPlayer();
+                break;
             default:
                 this.playSound('error');
                 this.print(`<span class="error">Befehl nicht gefunden: ${cmd}</span>`, 'error');
                 this.print('Tippe "help" für eine Liste aller Befehle.', 'warning');
         }
+    }
+    
+    async typeText(text, className = 'info', speed = 30) {
+        const div = document.createElement('div');
+        div.className = 'output-line ' + className;
+        this.output.appendChild(div);
+        
+        for (let i = 0; i < text.length; i++) {
+            div.textContent += text[i];
+            this.output.scrollTop = this.output.scrollHeight;
+            await this.sleep(speed);
+        }
+    }
+
+
+
+    openNotes() {
+        this.print('<span class="category-header">═══ NOTES APP ═══</span>');
+        this.print('1. Weltherrschaftspläne (Verschlüsselt)');
+        this.print('2. Einkaufsliste: Milch, Eier, Quantenflux-Kompensator');
+        this.print('3. Ideen für neue Projekte');
+        this.print('<span class="warning">Zugriff verweigert: Biometrischer Scan erforderlich.</span>');
+    }
+
+    launchAudPlayer() {
+        this.print('<span class="category-header">═══ AUDIO PLAYER ═══</span>');
+        this.print('Initialisiere Audio-Subsystem...');
+        setTimeout(() => {
+            this.print('<span class="error">Fehler: Keine Audio-Dateien gefunden.</span>', 'error');
+            this.print('Bitte lege Kassetten ein.', 'info');
+        }, 1000);
     }
     
     toggleSound() {
@@ -361,29 +582,32 @@ class CyberTerminal {
 <span class="help-command">help</span>
 <span class="help-description">Zeigt diese Hilfe an</span>
 
-<span class="help-command">projects [kategorie]</span>
-<span class="help-description">Listet alle Projekte oder Projekte einer bestimmten Kategorie</span>
+<span class="help-command">ls / dir</span>
+<span class="help-description">Listet Verzeichnisinhalt auf</span>
 
-<span class="help-command">categories</span>
-<span class="help-description">Zeigt alle verfügbaren Kategorien</span>
+<span class="help-command">cd &lt;pfad&gt;</span>
+<span class="help-description">Wechselt das Verzeichnis</span>
 
-<span class="help-command">cat &lt;projektname&gt;</span>
-<span class="help-description">Zeigt Details zu einem Projekt</span>
+<span class="help-command">cat &lt;datei&gt;</span>
+<span class="help-description">Zeigt Dateiinhalt oder Projektdetails</span>
 
-<span class="help-command">cd &lt;kategorie&gt;</span>
-<span class="help-description">Wechselt in eine Kategorie</span>
-
-<span class="help-command">ls</span>
-<span class="help-description">Listet Projekte in aktueller Kategorie (wie projects)</span>
+<span class="help-command">projects</span>
+<span class="help-description">Listet alle Projekte (Shortcut)</span>
 
 <span class="help-command">pwd</span>
 <span class="help-description">Zeigt aktuellen Pfad</span>
 
-<span class="help-command">search &lt;suchbegriff&gt;</span>
+<span class="help-command">mkdir &lt;name&gt;</span>
+<span class="help-description">Erstellt ein Verzeichnis</span>
+
+<span class="help-command">touch &lt;name&gt;</span>
+<span class="help-description">Erstellt eine leere Datei</span>
+
+<span class="help-command">search &lt;query&gt;</span>
 <span class="help-description">Sucht nach Projekten</span>
 
 <span class="help-command">tree</span>
-<span class="help-description">Zeigt Projektstruktur als Baum</span>
+<span class="help-description">Zeigt Struktur als Baum</span>
 
 <span class="help-command">clear / cls</span>
 <span class="help-description">Löscht den Bildschirm</span>
@@ -397,21 +621,8 @@ class CyberTerminal {
 <span class="help-command">contact</span>
 <span class="help-description">Kontaktinformationen</span>
 
-<span class="help-command">fortune</span>
-<span class="help-description">Zeigt ein zufälliges Zitat</span>
-
-<span class="help-command">history</span>
-<span class="help-description">Zeigt Befehlshistorie</span>
-
-<span class="help-command">credits</span>
-<span class="help-description">Credits anzeigen</span>
-
-<span class="help-command">sound</span>
-<span class="help-description">Sound-Effekte ein-/ausschalten</span>
-
 <span class="info">═══════════════════════════════════════</span>
 <span class="warning">💡 Tipp: Nutze ↑/↓ für Historie und Tab für Autovervollständigung</span>
-<span class="easter-egg">🥚 Easter Eggs: Probiere 'matrix', 'hack', '42', 'sudo', 'konami'...</span>
 `;
         this.print(help);
     }
@@ -483,62 +694,134 @@ class CyberTerminal {
         this.print('');
     }
     
-    showProjectDetails(projectName) {
-        if (!projectName) {
-            this.print('<span class="error">Bitte gib einen Projektnamen an: cat &lt;projektname&gt;</span>', 'error');
+    changeDirectory(path) {
+        if (!path || path === '~') {
+            this.currentDir = this.fileSystem['~'];
+            this.currentPath = '~';
+            this.updatePrompt();
             return;
         }
         
-        // Search for project
-        let found = null;
-        let foundCategory = null;
+        const result = this.resolvePath(path);
         
-        for (const [category, projects] of Object.entries(this.projects)) {
-            const project = projects.find(p => 
-                p.name.toLowerCase().includes(projectName.toLowerCase())
-            );
-            if (project) {
-                found = project;
-                foundCategory = category;
-                break;
+        if (result && result.node.type === 'dir') {
+            this.currentDir = result.node;
+            this.currentPath = result.path;
+            this.updatePrompt();
+        } else if (result && result.node.type !== 'dir') {
+            this.print(`<span class="error">cd: ${path}: Ist kein Verzeichnis</span>`, 'error');
+        } else {
+            this.print(`<span class="error">cd: ${path}: Datei oder Verzeichnis nicht gefunden</span>`, 'error');
+        }
+    }
+
+    listDirectory(path) {
+        let targetNode = this.currentDir;
+        
+        if (path) {
+            const result = this.resolvePath(path);
+            if (result) {
+                targetNode = result.node;
+            } else {
+                this.print(`<span class="error">ls: ${path}: Datei oder Verzeichnis nicht gefunden</span>`, 'error');
+                return;
             }
         }
         
-        if (found) {
-            const details = `
-<span class="category-header">═══ PROJEKT DETAILS ═══</span>
-<span class="highlight">Name:</span> <span class="success">${found.name}</span>
-<span class="highlight">Kategorie:</span> <span class="warning">${foundCategory}</span>
-<span class="highlight">Beschreibung:</span> <span class="info">${found.description}</span>
-<span class="highlight">URL:</span> <a href="${found.url}" target="_blank">${found.url}</a>
-
-<span class="success">▶ Klicke auf den Link oder nutze den Link zum Öffnen</span>
-`;
-            this.print(details);
+        if (targetNode.type === 'dir') {
+            const items = Object.keys(targetNode.children).sort();
+            if (items.length === 0) {
+                // Empty directory
+                return;
+            }
+            
+            // Format output
+            const outputDiv = document.createElement('div');
+            outputDiv.className = 'ls-output';
+            outputDiv.style.display = 'flex';
+            outputDiv.style.flexWrap = 'wrap';
+            outputDiv.style.gap = '20px';
+            
+            items.forEach(item => {
+                const child = targetNode.children[item];
+                const span = document.createElement('span');
+                span.textContent = item + (child.type === 'dir' ? '/' : '');
+                span.className = child.type === 'dir' ? 'ls-dir' : (child.type === 'link' ? 'ls-link' : 'ls-file');
+                if (child.type === 'dir') span.style.color = '#00d4ff';
+                if (child.type === 'link') span.style.color = '#00ff41';
+                outputDiv.appendChild(span);
+            });
+            
+            this.output.appendChild(outputDiv);
+            this.print(''); // New line
         } else {
-            this.print(`<span class="error">Projekt nicht gefunden: ${projectName}</span>`, 'error');
-            this.print('<span class="warning">Nutze "projects" um alle Projekte zu sehen</span>');
+            // List single file
+            this.print(path);
         }
     }
-    
-    changeDirectory(directory) {
-        if (!directory || directory === '~') {
-            this.currentPath = '~';
-            this.currentCategory = null;
-            this.print('<span class="success">Zurück zum Home-Verzeichnis</span>');
-        } else if (directory === '..') {
-            this.currentPath = '~';
-            this.currentCategory = null;
-            this.print('<span class="success">Zurück zum Home-Verzeichnis</span>');
-        } else if (this.projects[directory.toLowerCase()]) {
-            this.currentCategory = directory.toLowerCase();
-            this.currentPath = `~/${this.currentCategory}`;
-            this.print(`<span class="success">Gewechselt zu: ${this.currentPath}</span>`);
-            this.print('<span class="info">Nutze "ls" um Projekte in dieser Kategorie zu sehen</span>');
-        } else {
-            this.print(`<span class="error">Kategorie nicht gefunden: ${directory}</span>`, 'error');
-            this.showCategories();
+
+    readFile(path) {
+        if (!path) {
+            this.print('<span class="error">cat: Dateiname fehlt</span>', 'error');
+            return;
         }
+        
+        const result = this.resolvePath(path);
+        
+        if (result) {
+            const node = result.node;
+            if (node.type === 'file') {
+                this.print(this.escapeHtml(node.content), 'file-content');
+            } else if (node.type === 'link') {
+                this.print(`<span class="category-header">═══ PROJEKT DETAILS ═══</span>`);
+                this.print(`<span class="highlight">Name:</span> <span class="success">${node.name}</span>`);
+                this.print(`<span class="highlight">Kategorie:</span> <span class="warning">${node.category}</span>`);
+                this.print(`<span class="highlight">Beschreibung:</span> <span class="info">${node.description}</span>`);
+                this.print(`<span class="highlight">URL:</span> <a href="${node.url}" target="_blank">${node.url}</a>`);
+                this.print(`<span class="success">▶ Klicke auf den Link um das Projekt zu öffnen</span>`);
+            } else if (node.type === 'dir') {
+                this.print(`<span class="error">cat: ${path}: Ist ein Verzeichnis</span>`, 'error');
+            }
+        } else {
+            this.print(`<span class="error">cat: ${path}: Datei oder Verzeichnis nicht gefunden</span>`, 'error');
+        }
+    }
+
+    makeDirectory(path) {
+        if (!path) {
+            this.print('<span class="error">mkdir: Verzeichnisname fehlt</span>', 'error');
+            return;
+        }
+        
+        // Simple implementation: only in current directory for now
+        if (this.currentDir.children[path]) {
+            this.print(`<span class="error">mkdir: ${path}: Existiert bereits</span>`, 'error');
+            return;
+        }
+        
+        this.currentDir.children[path] = {
+            type: 'dir',
+            children: {}
+        };
+        this.print(`<span class="success">Verzeichnis erstellt: ${path}</span>`);
+    }
+
+    touchFile(path) {
+        if (!path) {
+            this.print('<span class="error">touch: Dateiname fehlt</span>', 'error');
+            return;
+        }
+        
+        if (this.currentDir.children[path]) {
+            // Update timestamp (simulated)
+            return;
+        }
+        
+        this.currentDir.children[path] = {
+            type: 'file',
+            content: ''
+        };
+        this.print(`<span class="success">Datei erstellt: ${path}</span>`);
     }
     
     searchProjects(query) {
@@ -601,20 +884,27 @@ class CyberTerminal {
     }
     
     showTree() {
-        this.print('<span class="category-header">═══ PROJEKTSTRUKTUR ═══</span>');
-        this.print('<span class="success">.</span>');
-        
-        Object.keys(this.projects).forEach(category => {
-            if (category === 'hidden') return;
+        this.print('<span class="category-header">═══ DATEISYSTEM ═══</span>');
+        this.print('<span class="success">~</span>');
+        this.traverseTreeChildren(this.fileSystem['~'], '');
+    }
+
+    traverseTreeChildren(node, prefix) {
+        const children = Object.keys(node.children).sort();
+        children.forEach((childName, index) => {
+            const isLast = index === children.length - 1;
+            const childNode = node.children[childName];
+            const pointer = isLast ? '└── ' : '├── ';
+            const nextPrefix = prefix + (isLast ? '    ' : '│   ');
             
-            const projects = this.projects[category];
-            this.print(`<span class="info">├── ${category}/</span>`);
+            const typeClass = childNode.type === 'dir' ? 'ls-dir' : (childNode.type === 'link' ? 'ls-link' : 'ls-file');
+            const suffix = childNode.type === 'dir' ? '/' : '';
             
-            projects.forEach((project, index) => {
-                const isLast = index === projects.length - 1;
-                const prefix = isLast ? '└──' : '├──';
-                this.print(`<span class="warning">│   ${prefix}</span> <span class="success">${project.name}</span>`);
-            });
+            this.print(`<span class="warning">${prefix}${pointer}</span><span class="${typeClass}">${childName}${suffix}</span>`);
+            
+            if (childNode.type === 'dir') {
+                this.traverseTreeChildren(childNode, nextPrefix);
+            }
         });
     }
     
@@ -831,18 +1121,42 @@ dem Universum und dem ganzen Rest ist:</span> <span class="success">42</span>
     }
     
     handleTabCompletion() {
-        const input = this.input.value.toLowerCase();
-        const commands = ['help', 'projects', 'cat', 'cd', 'clear', 'ls', 'pwd', 
-                         'whoami', 'date', 'echo', 'categories', 'search', 'about',
-                         'contact', 'fortune', 'tree', 'history', 'credits',
-                         'matrix', 'hack', 'sudo', 'exit', 'secret', 'konami'];
+        const input = this.input.value;
+        const parts = input.split(' ');
         
-        const matches = commands.filter(cmd => cmd.startsWith(input));
-        
-        if (matches.length === 1) {
-            this.input.value = matches[0] + ' ';
-        } else if (matches.length > 1) {
-            this.print(`<span class="info">Mögliche Befehle: ${matches.join(', ')}</span>`);
+        if (parts.length === 1) {
+            // Command completion
+            const cmd = parts[0].toLowerCase();
+            const commands = ['help', 'projects', 'cat', 'cd', 'clear', 'ls', 'pwd', 
+                             'whoami', 'date', 'echo', 'categories', 'search', 'about',
+                             'contact', 'fortune', 'tree', 'history', 'credits',
+                             'matrix', 'hack', 'sudo', 'exit', 'secret', 'konami',
+                             'mkdir', 'touch'];
+            
+            const matches = commands.filter(c => c.startsWith(cmd));
+            
+            if (matches.length === 1) {
+                this.input.value = matches[0] + ' ';
+            } else if (matches.length > 1) {
+                this.print(`<span class="info">Mögliche Befehle: ${matches.join(', ')}</span>`);
+            }
+        } else {
+            // File/Directory completion
+            const lastPart = parts[parts.length - 1];
+            const currentItems = Object.keys(this.currentDir.children);
+            
+            const matches = currentItems.filter(item => item.startsWith(lastPart));
+            
+            if (matches.length === 1) {
+                parts[parts.length - 1] = matches[0];
+                // Add slash if it's a directory
+                if (this.currentDir.children[matches[0]].type === 'dir') {
+                    parts[parts.length - 1] += '/';
+                }
+                this.input.value = parts.join(' ');
+            } else if (matches.length > 1) {
+                this.print(`<span class="info">Mögliche Dateien: ${matches.join(', ')}</span>`);
+            }
         }
     }
     
