@@ -316,13 +316,31 @@ class CyberTerminal {
         const projects = this.projects[category];
         this.print(`<span class="category-header">▼ ${category.toUpperCase()} (${projects.length})</span>`);
         projects.forEach((project, index) => {
-            const projectHtml = `
-<div class="project-item" onclick="window.open('${project.url}', '_blank')">
-    <span class="project-title">${index + 1}. ${project.name}</span>
-    <div class="project-description">${project.description}</div>
-    <div class="project-category">→ ${project.url}</div>
-</div>`;
-            this.print(projectHtml);
+            const projectDiv = document.createElement('div');
+            projectDiv.className = 'project-item';
+            projectDiv.style.cursor = 'pointer';
+            projectDiv.onclick = () => window.open(project.url, '_blank');
+            
+            const title = document.createElement('span');
+            title.className = 'project-title';
+            title.textContent = `${index + 1}. ${project.name}`;
+            
+            const desc = document.createElement('div');
+            desc.className = 'project-description';
+            desc.textContent = project.description;
+            
+            const url = document.createElement('div');
+            url.className = 'project-category';
+            url.textContent = `→ ${project.url}`;
+            
+            projectDiv.appendChild(title);
+            projectDiv.appendChild(desc);
+            projectDiv.appendChild(url);
+            
+            const line = document.createElement('div');
+            line.className = 'output-line';
+            line.appendChild(projectDiv);
+            this.output.appendChild(line);
         });
         this.print('');
     }
@@ -391,7 +409,7 @@ class CyberTerminal {
             return;
         }
         
-        this.print(`<span class="category-header">═══ SUCHERGEBNISSE FÜR: ${query} ═══</span>`);
+        this.print(`<span class="category-header">═══ SUCHERGEBNISSE FÜR: ${this.escapeHtml(query)} ═══</span>`);
         let found = false;
         
         for (const [category, projects] of Object.entries(this.projects)) {
@@ -404,14 +422,37 @@ class CyberTerminal {
             
             if (matches.length > 0) {
                 found = true;
-                matches.forEach((project, index) => {
-                    const projectHtml = `
-<div class="project-item" onclick="window.open('${project.url}', '_blank')">
-    <span class="project-title">${project.name}</span> <span class="project-category">[${category}]</span>
-    <div class="project-description">${project.description}</div>
-    <div class="project-category">→ ${project.url}</div>
-</div>`;
-                    this.print(projectHtml);
+                matches.forEach((project) => {
+                    const projectDiv = document.createElement('div');
+                    projectDiv.className = 'project-item';
+                    projectDiv.style.cursor = 'pointer';
+                    projectDiv.onclick = () => window.open(project.url, '_blank');
+                    
+                    const titleSpan = document.createElement('span');
+                    titleSpan.className = 'project-title';
+                    titleSpan.textContent = project.name;
+                    
+                    const catSpan = document.createElement('span');
+                    catSpan.className = 'project-category';
+                    catSpan.textContent = ` [${category}]`;
+                    
+                    const desc = document.createElement('div');
+                    desc.className = 'project-description';
+                    desc.textContent = project.description;
+                    
+                    const url = document.createElement('div');
+                    url.className = 'project-category';
+                    url.textContent = `→ ${project.url}`;
+                    
+                    projectDiv.appendChild(titleSpan);
+                    projectDiv.appendChild(catSpan);
+                    projectDiv.appendChild(desc);
+                    projectDiv.appendChild(url);
+                    
+                    const line = document.createElement('div');
+                    line.className = 'output-line';
+                    line.appendChild(projectDiv);
+                    this.output.appendChild(line);
                 });
             }
         }
@@ -484,7 +525,7 @@ Projekte von Professor Quantum Universe präsentiert.</span>
 <span class="category-header">═══ KONTAKT ═══</span>
 
 <span class="success">GitHub:</span> <a href="https://github.com/ProfessorQuantumUniverse" target="_blank">@ProfessorQuantumUniverse</a>
-<span class="success">Email:</span> <span class="info">contact@quantumuniverse.dev</span>
+<span class="success">Email:</span> <span class="info">contact [at] quantumuniverse [dot] dev</span>
 <span class="success">Web:</span> <a href="https://professorquantumuniverse.github.io" target="_blank">professorquantumuniverse.github.io</a>
 
 <span class="warning">Für Projektanfragen, Kollaborationen oder einfach nur um Hallo zu sagen!</span>
@@ -669,6 +710,12 @@ dem Universum und dem ganzen Rest ist:</span> <span class="success">42</span>
     
     clearScreen() {
         this.output.innerHTML = '';
+    }
+    
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
     
     print(text, className = '') {
