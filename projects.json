@@ -1,179 +1,109 @@
 {
   "experimente": [
     {
-      "name": "Quantum-Simulator",
-      "description": "Ein interaktiver Quantencomputer-Simulator mit Visualisierung",
-      "url": "https://professorquantumuniverse.github.io/quantum-sim"
+      "name": "HTML Hacking Simulator",
+      "description": "A HTML hacking simulator, that let people who look what you're doing on your computer think that ...",
+      "url": "https://professorquantumuniverse.github.io/HTML-Hacking-Simulator/"
     },
     {
-      "name": "Neural-Art",
-      "description": "KI-generierte Kunst mit neuronalen Netzen",
-      "url": "https://professorquantumuniverse.github.io/neural-art"
+      "name": "Gravity Calculator",
+      "description": "A simple HTML Gravity Constant Calculator for the cavandish experiment.",
+      "url": "https://professorquantumuniverse.github.io/Gravity-Calculator/"
     },
     {
-      "name": "Crypto-Analyzer",
-      "description": "Echtzeit-Kryptowährungsanalyse und Vorhersagen",
-      "url": "https://professorquantumuniverse.github.io/crypto-analyzer"
-    },
-    {
-      "name": "DNA-Decoder",
-      "description": "DNA-Sequenz-Visualisierung und Analyse-Tool",
-      "url": "https://professorquantumuniverse.github.io/dna-decoder"
-    },
-    {
-      "name": "Chaos-Theory",
-      "description": "Visualisierung chaotischer Systeme und Fraktale",
-      "url": "https://professorquantumuniverse.github.io/chaos-theory"
-    },
-    {
-      "name": "Black-Hole-Sim",
-      "description": "Schwarzes-Loch-Simulator mit Gravitationslinseneffekt",
-      "url": "https://professorquantumuniverse.github.io/blackhole"
-    },
-    {
-      "name": "Time-Dilation",
-      "description": "Relativistische Zeitdilatation berechnen und visualisieren",
-      "url": "https://professorquantumuniverse.github.io/time-dilation"
-    },
-    {
-      "name": "Particle-Lab",
-      "description": "Teilchenphysik-Labor mit Kollisionsexperimenten",
-      "url": "https://professorquantumuniverse.github.io/particle-lab"
-    }
-  ],
-  "kram": [
-    {
-      "name": "Retro-Music-Player",
-      "description": "Musik-Player mit Retro-Visualisierungen",
-      "url": "https://professorquantumuniverse.github.io/retro-music"
-    },
-    {
-      "name": "Pixel-Editor",
-      "description": "Pixelgrafik-Editor im Retro-Stil",
-      "url": "https://professorquantumuniverse.github.io/pixel-editor"
-    },
-    {
-      "name": "Terminal-Chat",
-      "description": "Chat-Anwendung im Terminal-Style",
-      "url": "https://professorquantumuniverse.github.io/terminal-chat"
-    },
-    {
-      "name": "Code-Snippet-Manager",
-      "description": "Verwalte deine Code-Snippets elegant",
-      "url": "https://professorquantumuniverse.github.io/snippet-manager"
-    },
-    {
-      "name": "Markdown-Preview",
-      "description": "Live Markdown-Editor mit Vorschau",
-      "url": "https://professorquantumuniverse.github.io/md-preview"
-    },
-    {
-      "name": "Color-Palette-Generator",
-      "description": "Generiere harmonische Farbpaletten",
-      "url": "https://professorquantumuniverse.github.io/color-gen"
-    },
-    {
-      "name": "ASCII-Art-Generator",
-      "description": "Wandle Bilder in ASCII-Art um",
-      "url": "https://professorquantumuniverse.github.io/ascii-gen"
-    },
-    {
-      "name": "Typing-Speed-Test",
-      "description": "Teste deine Tippgeschwindigkeit",
-      "url": "https://professorquantumuniverse.github.io/typing-test"
-    }
-  ],
-  "sonstiges": [
-    {
-      "name": "Portfolio",
-      "description": "Mein persönliches Portfolio im Cyber-Style",
-      "url": "https://professorquantumuniverse.github.io/portfolio"
-    },
-    {
-      "name": "Blog",
-      "description": "Blog über Wissenschaft und Technologie",
-      "url": "https://professorquantumuniverse.github.io/blog"
-    },
-    {
-      "name": "CV-Generator",
-      "description": "Interaktiver Lebenslauf-Generator",
-      "url": "https://professorquantumuniverse.github.io/cv-gen"
-    },
-    {
-      "name": "Contact-Form",
-      "description": "Cooles Kontaktformular mit Animationen",
-      "url": "https://professorquantumuniverse.github.io/contact"
-    },
-    {
-      "name": "About-Me",
-      "description": "Über mich Seite mit Timeline",
-      "url": "https://professorquantumuniverse.github.io/about"
-    }
-  ],
-  "games": [
-    {
-      "name": "Space-Invaders",
-      "description": "Klassisches Space Invaders im Terminal-Style",
-      "url": "https://professorquantumuniverse.github.io/space-invaders"
-    },
-    {
-      "name": "Snake-Game",
-      "description": "Snake-Spiel mit Highscore",
-      "url": "https://professorquantumuniverse.github.io/snake"
-    },
-    {
-      "name": "Tetris",
-      "description": "Tetris-Klon im Retro-Design",
-      "url": "https://professorquantumuniverse.github.io/tetris"
-    },
-    {
-      "name": "Pong",
-      "description": "Pong-Spiel gegen KI",
-      "url": "https://professorquantumuniverse.github.io/pong"
-    },
-    {
-      "name": "Breakout",
-      "description": "Breakout mit Power-Ups",
-      "url": "https://professorquantumuniverse.github.io/breakout"
+      "name": "NoS",
+      "description": "A night of science voting app.",
+      "url": "http://professorquantumuniverse.github.io/NoS/"
     }
   ],
   "tools": [
     {
-      "name": "JSON-Formatter",
-      "description": "JSON formatieren und validieren",
-      "url": "https://professorquantumuniverse.github.io/json-tool"
-    },
-    {
-      "name": "Base64-Encoder",
-      "description": "Base64 kodieren und dekodieren",
-      "url": "https://professorquantumuniverse.github.io/base64"
-    },
-    {
-      "name": "Hash-Generator",
-      "description": "Verschiedene Hash-Funktionen",
-      "url": "https://professorquantumuniverse.github.io/hash-gen"
-    },
-    {
-      "name": "Regex-Tester",
-      "description": "Reguläre Ausdrücke testen",
-      "url": "https://professorquantumuniverse.github.io/regex-test"
-    },
-    {
-      "name": "QR-Code-Generator",
-      "description": "QR-Codes erstellen",
-      "url": "https://professorquantumuniverse.github.io/qr-gen"
+      "name": "Fastlane Checker",
+      "description": "A simple WebApp, to check the correct structure of a f droid app repo.",
+      "url": "http://professorquantumuniverse.github.io/Fastlane-Checker/"
     }
   ],
-  "hidden": [
+  "kram": [
     {
-      "name": "Secret-Project-X",
-      "description": "███████ ███████ ███████",
-      "url": "https://professorquantumuniverse.github.io/secret-x"
+      "name": "Gitcademy",
+      "description": "A free online Academy to learn Git.",
+      "url": "https://professorquantumuniverse.github.io/Gitcademy/"
     },
     {
-      "name": "Matrix-Rain",
-      "description": "The Matrix... everywhere",
-      "url": "https://professorquantumuniverse.github.io/matrix"
+      "name": "RigolManual",
+      "description": "A Webmanual for Rigol ds1202ze DSO.",
+      "url": "https://professorquantumuniverse.github.io/RigolManual/"
+    },
+    {
+      "name": "AggressiveChristmas",
+      "description": "GitHub Pages Projekt: AggressiveChristmas",
+      "url": "https://professorquantumuniverse.github.io/AggressiveChristmas/"
+    },
+    {
+      "name": "Livingwebsite",
+      "description": "GitHub Pages Projekt: Livingwebsite",
+      "url": "https://professorquantumuniverse.github.io/livingwebsite/"
+    },
+    {
+      "name": "Cool WebApp Searchengine",
+      "description": "A sleek and powerful search engine designed for discovering web applications. This project provid...",
+      "url": "https://professorquantumuniverse.github.io/Cool-WebApp-Searchengine/"
+    },
+    {
+      "name": "ProjectExperience",
+      "description": "GitHub Pages Projekt: ProjectExperience",
+      "url": "https://professorquantumuniverse.github.io/ProjectExperience/"
+    },
+    {
+      "name": "Sense Hub LED Matrix Helper",
+      "description": "A very simpel Sense-Hub-LED-Matrix-Helper.",
+      "url": "http://professorquantumuniverse.github.io/Sense-Hub-LED-Matrix-Helper/"
+    },
+    {
+      "name": "SpaceStuff",
+      "description": "GitHub Pages Projekt: SpaceStuff",
+      "url": "https://professorquantumuniverse.github.io/SpaceStuff/"
+    },
+    {
+      "name": "My Project Universe",
+      "description": "GitHub Pages Projekt: My Project Universe",
+      "url": "https://professorquantumuniverse.github.io/My-Project-Universe/"
+    },
+    {
+      "name": "Privacy",
+      "description": "GitHub Pages Projekt: Privacy",
+      "url": "http://privacy.quantumuniverse.me/"
+    },
+    {
+      "name": "My Projects",
+      "description": "A cute site, with all my projects.",
+      "url": "https://professorquantumuniverse.github.io/My-Projects/"
+    },
+    {
+      "name": "QR Stream",
+      "description": "GitHub Pages Projekt: QR Stream",
+      "url": "https://professorquantumuniverse.github.io/QR-Stream/"
+    },
+    {
+      "name": "AstroClub Planetenquiz",
+      "description": "GitHub Pages Projekt: AstroClub Planetenquiz",
+      "url": "https://professorquantumuniverse.github.io/AstroClub-Planetenquiz/"
+    },
+    {
+      "name": "The Wisdom Of Einstein",
+      "description": "GitHub Pages Projekt: The Wisdom Of Einstein",
+      "url": "https://professorquantumuniverse.github.io/the-wisdom-of-Einstein/"
+    },
+    {
+      "name": "Interstellar",
+      "description": "Prototype of a 3D interstellar journey in the browser using creative coding.  FOR THE MOVIE \"INTE...",
+      "url": "https://professorquantumuniverse.github.io/interstellar/"
+    },
+    {
+      "name": "Minion World",
+      "description": "GitHub Pages Projekt: Minion World",
+      "url": "https://professorquantumuniverse.github.io/Minion-World/"
     }
-  ]
+  ],
+  "hidden": []
 }
