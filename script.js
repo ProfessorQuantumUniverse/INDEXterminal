@@ -91,6 +91,9 @@ class CyberTerminal {
         // Show boot sequence first
         await this.showBootSequence();
         
+        // Show welcome popup
+        await this.showWelcomePopup();
+        
         // Load projects from JSON
         await this.loadProjects();
         
@@ -99,6 +102,34 @@ class CyberTerminal {
         
         // Setup event listeners
         this.setupEventListeners();
+    }
+    
+    showWelcomePopup() {
+        return new Promise((resolve) => {
+            const popup = document.getElementById('welcome-popup');
+            const closeBtn = document.getElementById('welcome-close-btn');
+            
+            // Show the popup
+            popup.classList.remove('hidden');
+            
+            // Handle close button click
+            const closePopup = () => {
+                popup.classList.add('hidden');
+                closeBtn.removeEventListener('click', closePopup);
+                document.removeEventListener('keydown', handleKeydown);
+                resolve();
+            };
+            
+            // Handle keyboard (Enter or Escape to close)
+            const handleKeydown = (e) => {
+                if (e.key === 'Enter' || e.key === 'Escape') {
+                    closePopup();
+                }
+            };
+            
+            closeBtn.addEventListener('click', closePopup);
+            document.addEventListener('keydown', handleKeydown);
+        });
     }
     
     setupEventListeners() {
