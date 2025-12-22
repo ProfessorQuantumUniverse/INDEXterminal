@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUANTUM_TERMINAL Admin v1.337</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Matrix Background -->
+    <canvas id="matrix-bg"></canvas>
+
+    <!-- CRT Effects -->
+    <div class="scanlines"></div>
+    <div class="crt-flicker"></div>
+    <div class="screen-glow"></div>
+
+    <!-- Admin Panel -->
+    <div id="admin-container" class="terminal-container">
+        <div id="terminal-header" class="terminal-header">
+            <span class="terminal-title" data-text="QUANTUM_ADMIN v1.337">QUANTUM_ADMIN v1.337</span>
+            <span class="terminal-status">ADMIN MODE</span>
+        </div>
+        
+        <div id="admin-content">
+            <div class="admin-section">
+                <h2 class="section-title">🔐 GitHub Repository Scanner</h2>
+                <p class="section-description">
+                    Scanne deinen GitHub-Account nach Repositories mit GitHub Pages und 
+                    generiere automatisch die projects.json Datei.
+                </p>
+                
+                <div class="input-group">
+                    <label for="github-username">GitHub Username:</label>
+                    <input type="text" id="github-username" placeholder="YourGitHubUsername">
+                </div>
+                
+                <div class="input-group">
+                    <label for="github-token">GitHub Access Token:</label>
+                    <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                    <small class="input-hint">
+                        Benötigt für: Repo-Schreibzugriff. 
+                        <a href="https://github.com/settings/tokens/new?scopes=repo" target="_blank">Token erstellen →</a>
+                    </small>
+                </div>
+
+                <div class="button-group">
+                    <button id="scan-btn" class="admin-btn primary">
+                        <span class="btn-icon">🔍</span> Repositories scannen
+                    </button>
+                    <button id="preview-btn" class="admin-btn secondary" disabled>
+                        <span class="btn-icon">👁️</span> Vorschau
+                    </button>
+                    <button id="push-btn" class="admin-btn danger" disabled>
+                        <span class="btn-icon">🚀</span> Push to Repository
+                    </button>
+                </div>
+            </div>
+
+            <!-- Status Display -->
+            <div class="admin-section">
+                <h3 class="section-title">📊 Status</h3>
+                <div id="status-container">
+                    <div id="status-log" class="status-log">
+                        <div class="log-entry info">System bereit. Warte auf Eingabe...</div>
+                    </div>
+                    <div id="progress-container" class="progress-container hidden">
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                        <span id="progress-text" class="progress-text">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div id="preview-section" class="admin-section hidden">
+                <h3 class="section-title">📝 Vorschau: projects.json</h3>
+                <div class="preview-stats">
+                    <span id="total-repos">0 Repositories</span> | 
+                    <span id="pages-repos">0 mit GitHub Pages</span>
+                </div>
+                <textarea id="json-preview" class="json-preview" readonly></textarea>
+                <div class="category-mapping">
+                    <h4>Kategorie-Zuordnung:</h4>
+                    <p class="hint">Repositories werden automatisch nach Keywords kategorisiert. 
+                    Du kannst die JSON-Datei vor dem Push manuell bearbeiten.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="admin-footer">
+            <a href="index.html" class="back-link">← Zurück zum Terminal</a>
+        </div>
+    </div>
+    
+    <script src="admin.js"></script>
+</body>
+</html>
