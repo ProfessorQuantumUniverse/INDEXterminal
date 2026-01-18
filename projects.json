@@ -18,12 +18,27 @@
   ],
   "tools": [
     {
+      "name": "QR Stream",
+      "description": "Air-gapped data transmission tool using animated QR & Data Matrix streams. Securely transfer file...",
+      "url": "https://professorquantumuniverse.github.io/QR-Stream/"
+    },
+    {
+      "name": "Markdown.Flow",
+      "description": "A beautiful Markdown to PDF converter",
+      "url": "https://professorquantumuniverse.github.io/Markdown.Flow/"
+    },
+    {
       "name": "Fastlane Checker",
       "description": "A simple WebApp, to check the correct structure of a f droid app repo.",
       "url": "http://professorquantumuniverse.github.io/Fastlane-Checker/"
     }
   ],
   "kram": [
+    {
+      "name": "3D Print Hub",
+      "description": "GitHub Pages Projekt: 3D Print Hub",
+      "url": "https://professorquantumuniverse.github.io/3D-Print-Hub/"
+    },
     {
       "name": "Gitcademy",
       "description": "A free online Academy to learn Git.",
@@ -78,11 +93,6 @@
       "name": "My Projects",
       "description": "A cute site, with all my projects.",
       "url": "https://professorquantumuniverse.github.io/My-Projects/"
-    },
-    {
-      "name": "QR Stream",
-      "description": "GitHub Pages Projekt: QR Stream",
-      "url": "https://professorquantumuniverse.github.io/QR-Stream/"
     },
     {
       "name": "AstroClub Planetenquiz",
