@@ -35,9 +35,24 @@
   ],
   "kram": [
     {
+      "name": "HQAstroCam",
+      "description": "GitHub Pages Projekt: HQAstroCam",
+      "url": "https://professorquantumuniverse.github.io/HQAstroCam/"
+    },
+    {
+      "name": "SV",
+      "description": "GitHub Pages Projekt: SV",
+      "url": "https://professorquantumuniverse.github.io/SV/"
+    },
+    {
       "name": "3D Print Hub",
       "description": "GitHub Pages Projekt: 3D Print Hub",
       "url": "https://professorquantumuniverse.github.io/3D-Print-Hub/"
+    },
+    {
+      "name": "AuroraCycles",
+      "description": "GitHub Pages Projekt: AuroraCycles",
+      "url": "https://professorquantumuniverse.github.io/AuroraCycles/"
     },
     {
       "name": "Gitcademy",
