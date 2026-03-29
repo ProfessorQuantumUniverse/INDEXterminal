@@ -1,6 +1,31 @@
 {
   "experimente": [
     {
+      "name": "Privacy",
+      "description": "Some pretty boring legal privacy disclaimer stuff.",
+      "url": "http://privacy.quantumuniverse.me/"
+    },
+    {
+      "name": "AggressiveChristmas",
+      "description": "The time you're waiting for christmas is hard, but this Site is here to make it even harder!",
+      "url": "https://professorquantumuniverse.github.io/AggressiveChristmas/"
+    },
+    {
+      "name": "AuroraCycles",
+      "description": "A somehow broken experiment about a page for predicting auroras.",
+      "url": "https://professorquantumuniverse.github.io/AuroraCycles/"
+    },
+    {
+      "name": "CoolGlobe",
+      "description": "Experiments with globe.gl and 3D Globe Maps in general.",
+      "url": "https://professorquantumuniverse.github.io/CoolGlobe/"
+    },
+    {
+      "name": "FFM Elections Dashboard",
+      "description": "A small analytics site to study the results of the last local elections in Frankfurt am Main.",
+      "url": "https://professorquantumuniverse.github.io/FFM-Elections-Dashboard/"
+    },
+    {
       "name": "HTML Hacking Simulator",
       "description": "A HTML hacking simulator, that let people who look what you're doing on your computer think that ...",
       "url": "https://professorquantumuniverse.github.io/HTML-Hacking-Simulator/"
@@ -13,7 +38,7 @@
     {
       "name": "NoS",
       "description": "A night of science voting app.",
-      "url": "http://professorquantumuniverse.github.io/NoS/"
+      "url": "https://professorquantumuniverse.github.io/NoS/"
     }
   ],
   "tools": [
@@ -30,79 +55,69 @@
     {
       "name": "Fastlane Checker",
       "description": "A simple WebApp, to check the correct structure of a f droid app repo.",
-      "url": "http://professorquantumuniverse.github.io/Fastlane-Checker/"
+      "url": "https://professorquantumuniverse.github.io/Fastlane-Checker/"
     }
   ],
   "kram": [
     {
-      "name": "HQAstroCam",
-      "description": "GitHub Pages Projekt: HQAstroCam",
-      "url": "https://professorquantumuniverse.github.io/HQAstroCam/"
+      "name": "Minion World",
+      "description": "Banana???!",
+      "url": "https://professorquantumuniverse.github.io/Minion-World/"
+    },
+    {
+      "name": "The Wisdom Of Einstein",
+      "description": "Some quotes from smart Einstein!",
+      "url": "https://professorquantumuniverse.github.io/the-wisdom-of-Einstein/"
+    },
+    {
+      "name": "AstroClub Planetenquiz",
+      "description": "Explore the Universe and enjoy the quiz where ever you meet the AstroClub of the physical society...",
+      "url": "https://professorquantumuniverse.github.io/AstroClub-Planetenquiz/"
+    },
+    {
+      "name": "ProjectExperience",
+      "description": "The online presence of my biggest wood project yet. Enjoy!",
+      "url": "https://professorquantumuniverse.github.io/ProjectExperience/"
+    },
+    {
+      "name": "SpaceStuff",
+      "description": "I want many things..... here is a bit of it......",
+      "url": "https://professorquantumuniverse.github.io/SpaceStuff/"
+    },
+    {
+      "name": "Livingwebsite",
+      "description": "Hi, I'm the description of this Website, I'm alive and so the project I should initially have des...",
+      "url": "https://professorquantumuniverse.github.io/livingwebsite/"
+    },
+    {
+      "name": "Gitcademy",
+      "description": "A beginning of a free online Academy to learn Git.",
+      "url": "https://professorquantumuniverse.github.io/Gitcademy/"
     },
     {
       "name": "SV",
-      "description": "GitHub Pages Projekt: SV",
+      "description": "Generate Protocols of the meetings of SV at FWS Frankfurt with ease!",
       "url": "https://professorquantumuniverse.github.io/SV/"
     },
     {
       "name": "3D Print Hub",
-      "description": "GitHub Pages Projekt: 3D Print Hub",
-      "url": "https://professorquantumuniverse.github.io/3D-Print-Hub/"
+      "description": "THE Homepage for 3D-Print-Hub™ ©",
+      "url": "http://3d-print-hub.quantumuniverse.me/"
     },
     {
-      "name": "AuroraCycles",
-      "description": "GitHub Pages Projekt: AuroraCycles",
-      "url": "https://professorquantumuniverse.github.io/AuroraCycles/"
+      "name": "HQAstroCam",
+      "description": "Turn your Raspberry Pi into a high-performance, standalone astrophotography rig!",
+      "url": "https://professorquantumuniverse.github.io/HQAstroCam/"
     },
     {
-      "name": "Gitcademy",
-      "description": "A free online Academy to learn Git.",
-      "url": "https://professorquantumuniverse.github.io/Gitcademy/"
+      "name": "Pi Day",
+      "description": "I LOVE PI! 3.14159265358979323...",
+      "url": "https://professorquantumuniverse.github.io/Pi-Day/"
     },
     {
-      "name": "RigolManual",
-      "description": "A Webmanual for Rigol ds1202ze DSO.",
-      "url": "https://professorquantumuniverse.github.io/RigolManual/"
-    },
-    {
-      "name": "AggressiveChristmas",
-      "description": "GitHub Pages Projekt: AggressiveChristmas",
-      "url": "https://professorquantumuniverse.github.io/AggressiveChristmas/"
-    },
-    {
-      "name": "Livingwebsite",
-      "description": "GitHub Pages Projekt: Livingwebsite",
-      "url": "https://professorquantumuniverse.github.io/livingwebsite/"
-    },
-    {
-      "name": "Cool WebApp Searchengine",
-      "description": "A sleek and powerful search engine designed for discovering web applications. This project provid...",
-      "url": "https://professorquantumuniverse.github.io/Cool-WebApp-Searchengine/"
-    },
-    {
-      "name": "ProjectExperience",
-      "description": "GitHub Pages Projekt: ProjectExperience",
-      "url": "https://professorquantumuniverse.github.io/ProjectExperience/"
-    },
-    {
-      "name": "Sense Hub LED Matrix Helper",
-      "description": "A very simpel Sense-Hub-LED-Matrix-Helper.",
-      "url": "http://professorquantumuniverse.github.io/Sense-Hub-LED-Matrix-Helper/"
-    },
-    {
-      "name": "SpaceStuff",
-      "description": "GitHub Pages Projekt: SpaceStuff",
-      "url": "https://professorquantumuniverse.github.io/SpaceStuff/"
-    },
-    {
-      "name": "My Project Universe",
-      "description": "GitHub Pages Projekt: My Project Universe",
-      "url": "https://professorquantumuniverse.github.io/My-Project-Universe/"
-    },
-    {
-      "name": "Privacy",
-      "description": "GitHub Pages Projekt: Privacy",
-      "url": "http://privacy.quantumuniverse.me/"
+      "name": "TectonicsMap",
+      "description": "A costumn made Map of the Tectonic Plates of Planet Earth, made in QGis with Dark Mode in mind.",
+      "url": "https://professorquantumuniverse.github.io/TectonicsMap/"
     },
     {
       "name": "My Projects",
@@ -110,24 +125,24 @@
       "url": "https://professorquantumuniverse.github.io/My-Projects/"
     },
     {
-      "name": "AstroClub Planetenquiz",
-      "description": "GitHub Pages Projekt: AstroClub Planetenquiz",
-      "url": "https://professorquantumuniverse.github.io/AstroClub-Planetenquiz/"
+      "name": "RigolManual",
+      "description": "A Webmanual for Rigol ds1202ze DSO.",
+      "url": "https://professorquantumuniverse.github.io/RigolManual/"
     },
     {
-      "name": "The Wisdom Of Einstein",
-      "description": "GitHub Pages Projekt: The Wisdom Of Einstein",
-      "url": "https://professorquantumuniverse.github.io/the-wisdom-of-Einstein/"
+      "name": "Cool WebApp Searchengine",
+      "description": "A sleek and powerful search engine designed for discovering web applications. This project provid...",
+      "url": "https://professorquantumuniverse.github.io/Cool-WebApp-Searchengine/"
+    },
+    {
+      "name": "Sense Hub LED Matrix Helper",
+      "description": "A very simpel Sense-Hub-LED-Matrix-Helper.",
+      "url": "https://professorquantumuniverse.github.io/Sense-Hub-LED-Matrix-Helper/"
     },
     {
       "name": "Interstellar",
       "description": "Prototype of a 3D interstellar journey in the browser using creative coding.  FOR THE MOVIE \"INTE...",
       "url": "https://professorquantumuniverse.github.io/interstellar/"
-    },
-    {
-      "name": "Minion World",
-      "description": "GitHub Pages Projekt: Minion World",
-      "url": "https://professorquantumuniverse.github.io/Minion-World/"
     }
   ],
   "hidden": []
