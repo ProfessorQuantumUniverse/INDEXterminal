@@ -142,7 +142,7 @@ Sounds können jederzeit mit dem `sound` Befehl deaktiviert werden.
 
 ## 📝 Lizenz
 
-© 2024 Professor Quantum Universe
+© 2024 - infinity Professor Quantum Universe
 
 ## 🌟 Fun Facts
 
